@@ -6,6 +6,7 @@ db.authenticate().
 then(() => {
   console.log('connected to the database');
 });
+
 const Page = db.define('page', {
   title: {
     type: Sequelize.STRING,

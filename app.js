@@ -1,22 +1,26 @@
 const express = require('express');
 const morgan = require('morgan');
 const routes = require('./routes');
-const wikiRoutes = require('./routes/wiki');
+
+const wikiRouter = require('./routes/wiki');
+const userRouter = require('./routes/user');
 const app = express();
 const db = require('./models/index.js');
 
 
 const PORT = 3000;
-app.use(routes);
-app.use(wikiRoutes);
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
+app.use(express.urlencoded({ //allows us to use req.body (this is a body parser...?)
+    extended: true
 }));
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/stylesheets"));
-
+app.use('/wiki', wikiRouter);
+app.use('/users', userRouter);
+app.get('/', (req, res) => {
+    res.redirect('/wiki');
+  });
 const init = async () => {
   await db.User.sync();
   await db.Page.sync();
